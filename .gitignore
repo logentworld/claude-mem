@@ -75,3 +75,15 @@ __pycache__/
 
 # Fixture homes written by tests (tests/services/prompt-import/token-usage.test.ts)
 tests/**/.generated/
+
+# Logent 빌드 생성물과 로컬 비밀 키는 커밋하지 않아요.
+/.gradle/
+/.kotlin/
+/build/
+/logent-plugin/build/
+/local.properties
+/keys/
+*.pem
+*.key
+!logent/runtime/package-lock.json
+local.properties

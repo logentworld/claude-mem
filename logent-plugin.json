@@ -1,0 +1,9 @@
+{
+  "id": "com.sleepysoong.logent.claude-mem",
+  "key": "logentworld:claude_mem",
+  "name": "Claude Mem",
+  "entry": "com.sleepysoong.logent.claudemem.ClaudeMemPlugin",
+  "dependencies": [],
+  "apiMin": 4,
+  "apiMax": 4
+}

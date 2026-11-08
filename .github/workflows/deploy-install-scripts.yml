@@ -10,6 +10,8 @@ on:
 
 jobs:
   deploy:
+    # 포크의 Logent 릴리스가 원본 설치 사이트를 배포하지 않아요.
+    if: github.repository == 'thedotmack/claude-mem'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

@@ -13,6 +13,8 @@ permissions:
 
 jobs:
   publish:
+    # 원본 npm 배포는 원본 저장소에서만 실행해요.
+    if: github.repository == 'thedotmack/claude-mem'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

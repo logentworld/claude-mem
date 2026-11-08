@@ -6,3 +6,12 @@ This product includes software developed for the Claude-Mem project.
 Licensed under the Apache License, Version 2.0.
 
 If other attributions are required by dependencies or included code, add them here.
+
+Logent 이식 변경
+- 원본: https://github.com/thedotmack/claude-mem
+- 고정 출처: UPSTREAM_COMMIT에 기록한 upstream 커밋을 사용해요.
+- 원본 LICENSE·저작권·이력을 보존하고 원본 README를 README.upstream.md로 옮겼어요.
+- 원본 src/storage/sqlite 저장·검색 엔진을 직접 가져와 Node.js 내장 SQLite에 연결해요.
+- Logent API 4 도구·설정·선택적 관찰 훅과 서명 .lpg 빌드를 추가해요.
+- 원본 설치기·Claude 전용 플러그인·클라우드 동기화·분석 전송을 자동 실행하지 않아요.
+- Logent 런타임의 의존 라이선스는 빌드된 자산 원본 ZIP과 패키지에 함께 제공해요.
