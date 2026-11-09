@@ -101,6 +101,7 @@ jobs:
           LOGENT_PLUGIN_SIGNING_KEY_FILE: ${{ steps.signing.outputs.key }}
           LOGENT_CONTENT_SIGNING_KEY_FILE: ${{ steps.signing.outputs.key }}
           LOGENT_PLUGIN_PUBLIC_KEY_FILE: ${{ steps.signing.outputs.public }}
+          LOGENT_OPERATIONAL_SIGNING: ${{ steps.signing.outputs.signed }}
         run: ./logent/build.sh -PlogentPluginApiMavenLocal=true
       - name: 실행별 산출물을 보존해요
         uses: actions/upload-artifact@v4

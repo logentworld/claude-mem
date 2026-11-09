@@ -6,22 +6,34 @@ cd "$(dirname "$0")/.."
 version="$(tr -d '[:space:]' < VERSION)"
 name="logent-claude-mem"
 dist="$PWD/build/dist"
-artifacts=("$dist/$name-v$version.aar" "$dist/$name-v$version-assets-source.zip")
-if [[ -n "${LOGENT_CONTENT_SIGNING_KEY_FILE:-}" ]]; then
-    mkdir -p build/keys
-    if [[ -n "${LOGENT_PLUGIN_PUBLIC_KEY_FILE:-}" ]]; then
-        public="$LOGENT_PLUGIN_PUBLIC_KEY_FILE"
+mkdir -p "$dist"
+work="$(mktemp -d)"
+trap 'rm -rf "$work"' EXIT
+suffix=""
+key="${LOGENT_CONTENT_SIGNING_KEY_FILE:-}"
+if [[ -z "$key" ]]; then
+    suffix="-ci"
+    key="$work/ci-signing.pem"
+    umask 077
+    openssl genpkey -algorithm EC -pkeyopt ec_paramgen_curve:P-256 -pkeyopt ec_param_enc:named_curve -out "$key"
+    public="$work/ci-public.der"
+    openssl ec -in "$key" -pubout -outform DER -conv_form uncompressed -param_enc named_curve -out "$public" 2>/dev/null
+else
+    if [[ "${LOGENT_OPERATIONAL_SIGNING:-true}" == "false" ]]; then
+        public="${LOGENT_PLUGIN_PUBLIC_KEY_FILE:?CI 임시 공개키 경로가 없어요.}"
     else
-        base64 --decode content-public-key.der.b64 > build/keys/content-public.der
-        public="$PWD/build/keys/content-public.der"
+        # 앱이 고정한 운영 공개키와 다른 키로 서명한 패키지는 게시하지 않아요.
+        public="$work/content-public.der"
+        base64 --decode content-public-key.der.b64 > "$public"
     fi
-    python3 logent/plugin-pack.py build \
-        --definition "$PWD/logent-plugin.json" --version "$version" \
-        --aar "$dist/$name-v$version.aar" \
-        --key "$LOGENT_CONTENT_SIGNING_KEY_FILE" --public-key "$public" \
-        --output "$dist/$name-v$version.lpg"
-    artifacts+=("$dist/$name-v$version.lpg")
 fi
+artifacts=("$dist/$name-v$version.aar" "$dist/$name-v$version-assets-source.zip")
+python3 logent/plugin-pack.py build \
+    --definition "$PWD/logent-plugin.json" --version "$version" \
+    --aar "$dist/$name-v$version.aar" \
+    --key "$key" --public-key "$public" \
+    --output "$dist/$name-v$version$suffix.lpg"
+artifacts+=("$dist/$name-v$version$suffix.lpg")
 python3 - "$dist" "${artifacts[@]}" <<'PY'
 import hashlib
 import pathlib
