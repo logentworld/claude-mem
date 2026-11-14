@@ -5,7 +5,7 @@
 - `src/storage/sqlite/`와 `src/core/schemas/`가 저장·검색·FTS·프로젝트·세션의 원본이에요. Logent용 스키마 복사본을 두지 않아요.
 - `logent/runtime/`은 원본 저장소를 가져오는 CLI와 `bun:sqlite` → Node.js `node:sqlite` 경계 어댑터예요.
 - `logent-plugin/`은 공개 API 4를 구현하는 Kotlin 도구·명령·설정·훅이에요.
-- 빌드된 CLI는 서명 `.lpg` 자산에서 Termux로 전개해요. 실행할 때 npm·원격 코드를 다운로드하지 않아요.
+- 빌드된 CLI는 `.lpg` 자산에서 Termux로 전개해요. 실행할 때 npm·원격 코드를 다운로드하지 않아요.
 
 ## 실행 환경과 데이터
 
@@ -27,11 +27,10 @@ Node.js 22.13 이상, unzip, sha256sum을 Termux에 준비해요. 내장 SQLite�
 
 ```bash
 ./logent/test.sh -PlogentPluginApiMavenLocal=true
-LOGENT_CONTENT_SIGNING_KEY_FILE="$HOME/.local/share/logent/content-signing.pem" \
-  ./logent/build.sh -PlogentPluginApiMavenLocal=true
+./logent/build.sh -PlogentPluginApiMavenLocal=true
 ```
 
-고정된 `plugin-api.lock`의 계약을 사용해요. 운영 서명 비밀 `LOGENT_CONTENT_SIGNING_KEY`가 설정된 CI는 설치 가능한 `.lpg`를 만들어요. 키가 없으면 별도 테스트 키로 서명한 `-ci.lpg`와 설치 불가 안내를 게시해요. 개인키는 저장소나 배포 파일에 넣지 않아요.
+고정된 `plugin-api.lock`의 계약을 사용해요. `.lpg`는 서명하지 않고 빌드에 키 파일이 필요 없어요.
 
 `main`·`logent` 커밋마다 테스트·lint·빌드·`edge` 프리릴리스를 실행하고, `v*` 태그는 태그 릴리스로 올려요. 원본 수정 갱신은 `git fetch upstream` → 변경 검토·merge → 회귀 검증 → `UPSTREAM_COMMIT` 갱신 순서로 해요.
 
